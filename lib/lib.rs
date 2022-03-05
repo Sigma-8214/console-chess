@@ -1,24 +1,24 @@
 use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Game {
+pub struct Game {
     bord: [[Option<Peice>; 8]; 8],
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Peice {
+pub struct Peice {
     piece_color: PeiceColor,
     piece_type: PieceType,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum PeiceColor {
+pub enum PeiceColor {
     White,
     Black,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum PieceType {
+pub enum PieceType {
     King,
     Queen,
     Rook,
@@ -37,7 +37,7 @@ macro_rules! peice {
 }
 
 impl Game {
-    fn new() -> Self {
+    pub fn new() -> Self {
         let mut bord = [[None; 8]; 8];
         bord[0] = [
             peice!(White, Rook),
@@ -65,7 +65,7 @@ impl Game {
         Game { bord }
     }
 
-    fn parse_fen(inp: &str) -> Self {
+    pub fn parse_fen(inp: &str) -> Self {
         let mut bord = [[None; 8]; 8];
 
         let parts = inp.split(' ').collect::<Vec<&str>>();
@@ -118,7 +118,7 @@ impl Game {
         row
     }
 
-    fn render(&self) {
+    pub fn render(&self) {
         let mut row_alt = false;
         let mut line_alt = true;
         for x in self.bord {
@@ -160,22 +160,6 @@ impl fmt::Display for Peice {
             PieceType::Bhishop => write!(f, "♝"),
             PieceType::Rook => write!(f, "♜"),
             PieceType::Pawn => write!(f, "♟︎"),
-        }
-    }
-}
-
-fn main() {
-    loop {
-        for i in [
-            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-            "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
-            "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2",
-            "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
-        ] {
-            let game = Game::parse_fen(i);
-            game.render();
-            std::thread::sleep(std::time::Duration::from_millis(350));
-            print!("\x1B[8A");
         }
     }
 }
