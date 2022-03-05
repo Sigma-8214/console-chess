@@ -118,7 +118,9 @@ impl Game {
         row
     }
 
-    pub fn render(&self) {
+    pub fn render(&self) -> String {
+        let mut to_print = String::new();
+
         let mut row_alt = false;
         let mut line_alt = true;
         for x in self.bord {
@@ -131,23 +133,29 @@ impl Game {
                 }
 
                 if row_alt ^ line_alt {
-                    print!("\x1B[0;{};47m", color);
-                } else {
-                    print!("\x1B[0;{};100m", color);
+                    to_print.push_str(&format!("\x1B[0;{};47m", color));
+                } else
+                /* ^ you dident see this */
+                {
+                    to_print.push_str(&format!("\x1B[0;{};100m", color));
                 }
                 row_alt = !row_alt;
 
-                print!(
-                    "{} ",
-                    match y {
-                        Some(i) => i.to_string(),
-                        None => " ".to_owned(),
-                    }
-                );
+                to_print.push_str(&match y {
+                    Some(i) => i.to_string(),
+                    None => " ".to_owned(),
+                });
+                to_print.push(' ');
             }
             line_alt = !line_alt;
-            println!("\x1B[0;0;0m");
+            to_print.push_str("\x1B[0;0;0m\n");
         }
+
+        to_print
+    }
+
+    pub fn display(&self) {
+        print!("{}", self.render());
     }
 }
 
